@@ -7,6 +7,8 @@ on:
       - master
     paths:
       - "apk-distribution/app-debug.apk"
+      - "apk-distribution/chunks/**"
+      - "apk-distribution/app-debug.apk.sha256"
   workflow_dispatch:
 
 permissions:
@@ -29,9 +31,21 @@ jobs:
 
           APK_PATH="apk-distribution/app-debug.apk"
           SHA_PATH="apk-distribution/app-debug.apk.sha256"
+          CHUNKS_DIR="apk-distribution/chunks"
+
+          if [ ! -s "$APK_PATH" ]; then
+            shopt -s nullglob
+            CHUNKS=( "$CHUNKS_DIR"/chunk-*.bin )
+            shopt -u nullglob
+
+            if [ "${#CHUNKS[@]}" -gt 0 ]; then
+              echo "Reassembling $APK_PATH from ${#CHUNKS[@]} verified chunks..."
+              LC_ALL=C cat "$CHUNKS_DIR"/chunk-*.bin > "$APK_PATH"
+            fi
+          fi
 
           if [ ! -f "$APK_PATH" ]; then
-            echo "::error::Missing APK file at $APK_PATH"
+            echo "::error::Missing APK file at $APK_PATH (and no chunks found in $CHUNKS_DIR)"
             exit 1
           fi
 
