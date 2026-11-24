@@ -1,0 +1,6 @@
+{
+  "name": "Chuva Radar SP",
+  "description": "Previsão e nowcasting de chuva em tempo real exclusivamente pelo radar meteorológico de 36km da USP (IAG), com mapa de distritos, widget e notificações.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

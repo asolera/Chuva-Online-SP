@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Chuva Radar SP</string>
+    <string name="widget_title">Radar Chuva SP</string>
+    <string name="widget_loading">Carregando radar…</string>
+    <string name="notification_channel_name">Alertas de Chuva</string>
+    <string name="notification_channel_desc">Notificações quando chuva estiver se aproximando do seu endereço</string>
+    <string name="cantareira_title">Sistema Cantareira</string>
+    <string name="cantareira_subtitle">Volume armazenado • 30 dias (SABESP)</string>
+    <string name="cantareira_volume_label">Volume útil atual</string>
+    <string name="cantareira_chart_title">Evolução diária (último mês)</string>
+    <string name="cantareira_chart_hint">Toque ou arraste no gráfico para ver cada dia</string>
+    <string name="cantareira_loading">Carregando dados oficiais da SABESP…</string>
+    <string name="cantareira_retry">Tentar novamente</string>
+    <string name="cantareira_refresh_desc">Atualizar dados do Sistema Cantareira</string>
+    <string name="cantareira_source_title">Fonte oficial: Portal Mananciais SABESP</string>
+    <string name="cantareira_source_url_label">mananciais.sabesp.com.br • Local 64 (Diário / 1 mês)</string>
+    <string name="cantareira_open_portal_desc">Abrir base de dados oficial da SABESP</string>
+</resources>

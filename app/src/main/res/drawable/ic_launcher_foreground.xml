@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <group
+        android:pivotX="54"
+        android:pivotY="54">
+        <!-- Outer radar ring -->
+        <path
+            android:strokeColor="#38BDF8"
+            android:strokeWidth="2.5"
+            android:pathData="M 54,20 A 34,34 0 1 1 53.9,20" />
+        <!-- Middle radar ring -->
+        <path
+            android:strokeColor="#0284C7"
+            android:strokeWidth="2"
+            android:pathData="M 54,32 A 22,22 0 1 1 53.9,32" />
+        <!-- Inner radar ring -->
+        <path
+            android:strokeColor="#0369A1"
+            android:strokeWidth="1.5"
+            android:pathData="M 54,44 A 10,10 0 1 1 53.9,44" />
+        <!-- Radar sweep cone -->
+        <path
+            android:fillColor="#3338BDF8"
+            android:pathData="M 54,54 L 88,34 A 34,34 0 0 1 88,54 Z" />
+        <!-- Crosshairs -->
+        <path
+            android:strokeColor="#475569"
+            android:strokeWidth="1.2"
+            android:pathData="M 54,16 L 54,92 M 16,54 L 92,54" />
+        <!-- Center beacon dot -->
+        <path
+            android:fillColor="#38BDF8"
+            android:pathData="M 54,51 A 3,3 0 1 1 53.9,51" />
+        <!-- Rain echoes / droplets -->
+        <path
+            android:fillColor="#22C55E"
+            android:pathData="M 68,36 A 3.5,3.5 0 1 1 67.9,36" />
+        <path
+            android:fillColor="#EAB308"
+            android:pathData="M 74,42 A 4,4 0 1 1 73.9,42" />
+        <path
+            android:fillColor="#EF4444"
+            android:pathData="M 66,46 A 3,3 0 1 1 65.9,46" />
+    </group>
+</vector>
