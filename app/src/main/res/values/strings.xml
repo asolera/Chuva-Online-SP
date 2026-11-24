@@ -15,4 +15,14 @@
     <string name="cantareira_source_title">Fonte oficial: Portal Mananciais SABESP</string>
     <string name="cantareira_source_url_label">mananciais.sabesp.com.br • Local 64 (Diário / 1 mês)</string>
     <string name="cantareira_open_portal_desc">Abrir base de dados oficial da SABESP</string>
+    <string name="rain_today_question">Vai chover hoje?</string>
+    <string name="rain_today_max_chance">chance máx.</string>
+    <string name="forecast_title">Previsão do Tempo</string>
+    <string name="forecast_subtitle">Chuva horária e próximos 8 dias (Open-Meteo)</string>
+    <string name="forecast_default_location">São Paulo - SP</string>
+    <string name="forecast_loading">Carregando previsão do tempo (Open-Meteo)…</string>
+    <string name="forecast_refresh_desc">Atualizar previsão do tempo</string>
+    <string name="forecast_source_title">Fonte aberta: Open-Meteo Weather API</string>
+    <string name="forecast_source_url_label">open-meteo.com • Previsão horária e 8 dias</string>
+    <string name="forecast_open_source_desc">Abrir site da Open-Meteo</string>
 </resources>

@@ -64,7 +64,9 @@ import com.example.chuvaradar.ui.components.CantareiraVolumeCard
 import com.example.chuvaradar.ui.components.DistrictMinimap
 import com.example.chuvaradar.ui.components.NowcastHeroCard
 import com.example.chuvaradar.ui.components.RadarViewer
+import com.example.chuvaradar.ui.components.RainTodayVerdictCard
 import com.example.chuvaradar.ui.components.SettingsSheet
+import com.example.chuvaradar.ui.components.WeatherForecastCard
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -74,6 +76,7 @@ fun RadarMainScreen(
     modifier: Modifier = Modifier
 ) {
     val state by viewModel.uiState.collectAsState()
+    val weatherForecastState by viewModel.weatherForecastState.collectAsState()
     val cantareiraState by viewModel.cantareiraState.collectAsState()
     val isPlaying by viewModel.isPlaying.collectAsState()
     val showUserPin by viewModel.showUserPin.collectAsState()
@@ -100,9 +103,10 @@ fun RadarMainScreen(
         containerColor = Color(0xFF070F1E),
         topBar = {
             RadarTopBar(
-                isRefreshing = state.isRefreshing || cantareiraState.isRefreshing,
+                isRefreshing = state.isRefreshing || weatherForecastState.isRefreshing || cantareiraState.isRefreshing,
                 onRefresh = {
                     viewModel.refreshRadar()
+                    viewModel.refreshWeatherForecast()
                     viewModel.refreshCantareira()
                 },
                 onOpenSettings = { showSettingsSheet = true }
@@ -289,7 +293,22 @@ fun RadarMainScreen(
 
             Spacer(modifier = Modifier.height(18.dp))
 
-            // 4. SISTEMA CANTAREIRA (Volume útil % e gráfico de 30 dias - SABESP)
+            // 4. VAI CHOVER HOJE? (Veredito rápido Sim / Talvez / Não)
+            RainTodayVerdictCard(
+                state = weatherForecastState
+            )
+
+            Spacer(modifier = Modifier.height(14.dp))
+
+            // 5. PREVISÃO DO TEMPO (Gráfico de chuva horária + Próximos 8 dias - Open-Meteo)
+            WeatherForecastCard(
+                state = weatherForecastState,
+                onRefresh = { viewModel.refreshWeatherForecast() }
+            )
+
+            Spacer(modifier = Modifier.height(18.dp))
+
+            // 6. SISTEMA CANTAREIRA (Volume útil % e gráfico de 30 dias - SABESP)
             CantareiraVolumeCard(
                 state = cantareiraState,
                 onRefresh = { viewModel.refreshCantareira() }

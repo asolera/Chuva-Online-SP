@@ -16,6 +16,8 @@ import com.example.chuvaradar.data.RadarRepository
 import com.example.chuvaradar.data.RadarUiState
 import com.example.chuvaradar.data.UserPreferencesDataStore
 import com.example.chuvaradar.data.UserSavedAddress
+import com.example.chuvaradar.data.WeatherForecastRepository
+import com.example.chuvaradar.data.WeatherForecastUiState
 import com.example.chuvaradar.widget.ChuvaRadarWidgetProvider
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -33,9 +35,11 @@ class RadarViewModel(application: Application) : AndroidViewModel(application) {
     private val preferences = UserPreferencesDataStore(application)
     private val repository = RadarRepository.getInstance(application)
     private val cantareiraRepository = CantareiraRepository.getInstance(application)
+    private val weatherForecastRepository = WeatherForecastRepository.getInstance(application)
 
     val uiState: StateFlow<RadarUiState> = repository.uiState
     val cantareiraState: StateFlow<CantareiraUiState> = cantareiraRepository.uiState
+    val weatherForecastState: StateFlow<WeatherForecastUiState> = weatherForecastRepository.uiState
 
     // Controles de animação do radar
     private val _isPlaying = MutableStateFlow(true)
@@ -89,8 +93,9 @@ class RadarViewModel(application: Application) : AndroidViewModel(application) {
             Log.e("RadarViewModel", "Erro ao agendar alarme: ${e.message}")
         }
 
-        // Carrega dados iniciais do radar e do Sistema Cantareira (SABESP)
+        // Carrega dados iniciais do radar, previsão Open-Meteo e Sistema Cantareira (SABESP)
         refreshRadar(showLoading = true)
+        refreshWeatherForecast(showLoading = true)
         refreshCantareira(showLoading = true)
 
         // Inicia loop de reprodução automática
@@ -101,10 +106,32 @@ class RadarViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             val result = repository.refreshRadar(showLoadingIndicator = showLoading)
             val state = repository.uiState.value
+            val isLiveRaining = !state.isDataOutdated && state.nowcast?.isRainingNow == true
+            weatherForecastRepository.updateLiveRadarRainStatus(isLiveRaining)
             ChuvaRadarWidgetProvider.updateAllWidgets(
                 getApplication(),
                 result.getOrNull(),
                 state.cityCoverage?.totalRainPercent
+            )
+        }
+    }
+
+    fun refreshWeatherForecast(
+        showLoading: Boolean = false,
+        addressOverride: UserSavedAddress? = null
+    ) {
+        viewModelScope.launch {
+            val activeAddr = addressOverride
+                ?: uiState.value.activeAddress
+                ?: preferences.getActiveAddress()
+            val radarState = uiState.value
+            val isLiveRaining = !radarState.isDataOutdated && radarState.nowcast?.isRainingNow == true
+            weatherForecastRepository.refresh(
+                latitude = activeAddr.latitude,
+                longitude = activeAddr.longitude,
+                locationLabel = activeAddr.label,
+                isLiveRadarRaining = isLiveRaining,
+                showLoadingIndicator = showLoading
             )
         }
     }
@@ -186,10 +213,15 @@ class RadarViewModel(application: Application) : AndroidViewModel(application) {
     fun selectPresetAddress(address: UserSavedAddress) {
         viewModelScope.launch {
             repository.updateActiveAddress(address)
+            val radarState = uiState.value
+            weatherForecastRepository.updateLiveRadarRainStatus(
+                !radarState.isDataOutdated && radarState.nowcast?.isRainingNow == true
+            )
+            refreshWeatherForecast(addressOverride = address)
             ChuvaRadarWidgetProvider.updateAllWidgets(
                 getApplication(),
-                uiState.value.nowcast,
-                uiState.value.cityCoverage?.totalRainPercent
+                radarState.nowcast,
+                radarState.cityCoverage?.totalRainPercent
             )
         }
     }
@@ -198,10 +230,15 @@ class RadarViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             val resolvedAddress = resolveAddressFromGeo(lat, lon, fallbackLabel)
             repository.updateActiveAddress(resolvedAddress)
+            val radarState = uiState.value
+            weatherForecastRepository.updateLiveRadarRainStatus(
+                !radarState.isDataOutdated && radarState.nowcast?.isRainingNow == true
+            )
+            refreshWeatherForecast(addressOverride = resolvedAddress)
             ChuvaRadarWidgetProvider.updateAllWidgets(
                 getApplication(),
-                uiState.value.nowcast,
-                uiState.value.cityCoverage?.totalRainPercent
+                radarState.nowcast,
+                radarState.cityCoverage?.totalRainPercent
             )
         }
     }
